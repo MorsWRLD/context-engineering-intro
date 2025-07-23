@@ -1,88 +1,196 @@
-### 🔄 Project Awareness & Context
-- **Always read `PLANNING.md`** at the start of a new conversation to understand the project's architecture, goals, style, and constraints.
-- **Check `TASK.md`** before starting a new task. If the task isn’t listed, add it with a brief description and today's date.
-- **Use consistent naming conventions, file structure, and architecture patterns** as described in `PLANNING.md`.
-- **Use venv_linux** (the virtual environment) whenever executing Python commands, including for unit tests.
-- **Основная LLM — `OpenAI API (GPT-4.5/4o)` с возможным расширением под `local LLM` через Ollama или подобные, в зависимости от задачи.
-- **Все async-функции должны быть совместимы с real-time коммуникацией (например, через WebSocket).
+🌹 Project Awareness & Context
 
-### 🧱 Code Structure & Modularity
-- **Never create a file longer than 500 lines of code.** If a file approaches this limit, refactor by splitting it into modules or helper files.
-- **Organize code into clearly separated modules**, grouped by feature or responsibility.
-  For agents this looks like:
-    - `agent.py` - Main agent definition and execution logic 
-    - `tools.py` - Tool functions used by the agent 
-    - `prompts.py` - System prompts
-- **Use clear, consistent imports** (prefer relative imports within packages).
-- **Use clear, consistent imports** (prefer relative imports within packages).
-- **Use python_dotenv and load_env()** for environment variables.
-- Агентная архитектура должна быть plug-n-play: легко заменять LLM, память, voice backend и даже векторные хранилища.
-- Используется LangChain или custom memory middleware (описано в PLANNING.md).
-- Вся логика голосовых агентов, real-time команд и пользовательского ввода вынесена в отдельные модули: `agent_core`, `streaming_io`, `avatar_controller`.
+Always read PLANNING.md at the start of a new conversation to understand Rose's personality architecture, relationship mechanics, and technical constraints.
+Check TASK.md before starting a new task. If the task isn't listed, add it with a brief description and today's date.
+Use consistent Rose personality patterns - flirty, dramatic, artistic, emotionally intelligent as described in PLANNING.md.
+Use venv_linux (the virtual environment) whenever executing Python commands, including for unit tests.
+**Primary LLM — OpenAI API (GPT-4o) with context optimization for Rose's personality consistency and fast response times.
+All async functions must support real-time communication for Telegram bot responsiveness and future VRM avatar integration.
 
+🧱 Code Structure & Modularity - Rose Architecture
 
-### 🧪 Testing & Reliability
-- **Always create Pytest unit tests for new features** (functions, classes, routes, etc).
-- **After updating any logic**, check whether existing unit tests need to be updated. If so, do it.
-- **Tests should live in a `/tests` folder** mirroring the main app structure.
-  - Include at least:
-    - 1 test for expected use
-    - 1 edge case
-    - 1 failure case
-- Если модуль зависит от внешнего API (OpenAI, 11Labs, etc.), использовать `mock`-интерфейсы и `env` переменные.
-- Все интеграционные тесты находятся в папке `/tests/integration`.
-- У agenta должен быть юнит-тест на реакцию на нестандартный промпт или неожиданный ответ LLM.
+Never create a file longer than 300 lines of code (stricter for Rose due to response speed requirements).
+Organize Rose's components into clearly separated modules:
+
+rose_personality/
+
+core.py - Rose's base personality traits and response patterns
+memory.py - Relationship memory and progression tracking
+emotions.py - Emotional state management and triggers
+relationships.py - Persona 5-style confidant system
 
 
-### ✅ Task Completion
-- **Mark completed tasks in `TASK.md`** immediately after finishing them.
-- Add new sub-tasks or TODOs discovered during development to `TASK.md` under a “Discovered During Work” section.
+telegram_bot/
 
-### 📎 Style & Conventions
-- **Use Python** as the primary language.
-- **Follow PEP8**, use type hints, and format with `black`.
-- **Use `pydantic` for data validation**.
-- Use `FastAPI` for APIs and `SQLAlchemy` or `SQLModel` for ORM if applicable.
-- Write **docstrings for every function** using the Google style:
-  ```python
-  def example():
-      """
-      Brief summary.
-
-      Args:
-          param1 (type): Description.
-
-      Returns:
-          type: Description.
-      """
-  ```
-- Используется `LangChain` или кастомный middleware для memory/agents.
-- Все промпты и системные команды хранятся в `prompts/` и должны быть сериализуемыми.
-- Используется `11labs` для голоса, `WebSocket` для стриминга, `OpenAI Whisper` (или `local whisper`) для распознавания.
+bot.py - Main Telegram bot logic
+handlers.py - Command and message handlers
+middleware.py - Session management and rate limiting
 
 
-### 📚 Documentation & Explainability
-- **Update `README.md`** when new features are added, dependencies change, or setup steps are modified.
-- **Comment non-obvious code** and ensure everything is understandable to a mid-level developer.
-- When writing complex logic, **add an inline `# Reason:` comment** explaining the why, not just the what.
+gacha_system/
 
-### 🧠 AI Behavior Rules
-- **Never assume missing context. Ask questions if uncertain.**
-- **Never hallucinate libraries or functions** – only use known, verified Python packages.
-- **Always confirm file paths and module names** exist before referencing them in code or tests.
-- **Never delete or overwrite existing code** unless explicitly instructed to or if part of a task from `TASK.md`.
-- Используется только OpenAI API или локальные модели через API-интерфейс.
-- Для всех AI-компонентов (генерация текста, речи, памяти) использовать middleware, чтобы в любой момент можно было сменить поставщика.
+mechanics.py - Pull system, pity mechanics, C1-C6 progression
+rewards.py - Outfit unlocks, relationship bonuses
 
-###📡 Real-time Communication
-- Все агенты должны поддерживать real-time взаимодействие.
-- Используется `WebSocket` + `async queue` + `TTS stream` для голоса.
-- Любая задержка выше 200мс считается проблемной и требует оптимизации.
 
-###🧬 LLM Stack
-- Основной стек:
-  - GPT-4o / GPT-4-turbo через OpenAI API
-  - 11Labs (voice)
-  - Whisper/OpenWhisper (ASR)
-  - LangChain (или кастомные memory-агенты)
-  - Chroma/FAISS (векторка, опционально)
+story_engine/
+
+scenarios.py - Date scenarios, conflict arcs, major story beats
+branching.py - Choice consequences and relationship impact
+
+
+avatar_system/ (future)
+
+vrm_controller.py - VRM avatar management
+expressions.py - Emotion-based avatar responses
+
+
+
+
+Use clear, consistent imports (prefer relative imports within packages).
+Use python_dotenv and load_env() for API keys (OpenAI, ElevenLabs, Telegram).
+Architecture must be plug-n-play: easy to swap LLM providers, memory backends, voice systems, and avatar engines.
+All Rose personality logic, real-time responses, and user interaction separated into: rose_core, streaming_io, personality_engine.
+
+🧪 Testing & Reliability - Rose Specific
+
+Always create Pytest unit tests for Rose's personality consistency:
+
+Personality trait stability across conversations
+Relationship progression accuracy
+Memory recall functionality
+Gacha mechanics fairness
+
+
+After updating Rose's personality logic, verify existing personality tests still pass.
+Tests should live in /tests folder mirroring Rose's structure:
+
+Include at least:
+
+1 test for expected Rose personality response
+1 edge case (user being rude/inappropriate)
+1 failure case (API timeout handling)
+
+
+
+
+Mock external APIs (OpenAI, ElevenLabs, Telegram) using environment variables.
+Integration tests in /tests/integration for:
+
+End-to-end conversation flows
+Relationship progression scenarios
+Gacha pull sequences
+
+
+Rose must have unit tests for handling unexpected user inputs and maintaining personality consistency.
+
+✅ Task Completion - Rose Development
+
+Mark completed Rose features in TASK.md immediately after finishing them.
+Track Rose's personality development - log major personality improvements or relationship mechanic additions.
+Add new Rose scenarios or conversation patterns discovered during development to TASK.md under "Rose Story Content".
+
+📎 Style & Conventions - Rose Codebase
+
+Use Python as the primary language for Rose's backend.
+Follow PEP8, use type hints, and format with black.
+Use pydantic for Rose's personality data validation (emotional states, relationship levels, user preferences).
+Use aiogram for Telegram bot and SQLAlchemy/SQLModel for user relationship data.
+Write docstrings for every Rose function using Google style:
+pythondef generate_rose_response(user_message: str, relationship_level: int) -> str:
+    """
+    Generate Rose's personality-consistent response.
+
+    Args:
+        user_message (str): User's input message
+        relationship_level (int): Current confidant level (1-10)
+
+    Returns:
+        str: Rose's contextual response matching her personality
+    """
+
+Use LangChain or custom middleware for Rose's memory and personality consistency.
+All Rose prompts and personality traits stored in prompts/rose/ and must be serializable.
+Use ElevenLabs for Rose's voice, WebSocket for real-time streaming, OpenAI Whisper for speech recognition (future).
+
+📚 Documentation & Explainability - Rose Context
+
+Update README.md when Rose gains new personality features, relationship mechanics, or gacha elements.
+Comment Rose's personality logic thoroughly - other developers need to understand her emotional patterns.
+For Rose's complex relationship mechanics, add # Rose Behavior: comments explaining why certain personality choices were made.
+Document Rose's conversation patterns and relationship progression in /docs/rose_personality.md.
+
+🧠 AI Behavior Rules - Rose Development
+
+Never break Rose's personality consistency - she must remain flirty, dramatic, artistic across all interactions.
+Never assume Rose's emotional state - always check current relationship level and user history.
+Never hallucinate Rose personality traits - only use established characteristics from PLANNING.md.
+Always confirm Rose's response patterns align with current relationship stage before implementing.
+Never delete Rose's core personality code unless explicitly refactoring personality system.
+Use only OpenAI API or local models through standardized interface for Rose's responses.
+All Rose AI components (personality, memory, voice) use middleware for easy provider switching.
+
+📡 Real-time Communication - Rose Responsiveness
+
+Rose must support real-time interaction for natural conversation flow.
+Use WebSocket + async queue + TTS stream for Rose's voice responses (future).
+Any Rose response delay above 2 seconds is problematic and requires optimization.
+Rose's personality should stream responses to maintain conversation immersion.
+Implement response caching for common Rose personality patterns.
+
+🧬 LLM Stack - Rose Technical
+
+Core Rose Stack:
+
+GPT-4o through OpenAI API (optimized prompts for Rose personality)
+ElevenLabs (Rose's emotional voice)
+Whisper/OpenWhisper (future speech input)
+Custom personality middleware (not LangChain initially for speed)
+ChromaDB (Rose's relationship memory)
+SQLite (user progression data)
+aiogram (Telegram bot framework)
+
+
+
+🎮 Rose-Specific Development Rules
+
+Rose's personality must be consistent across all conversation contexts
+Relationship progression follows Persona 5 confidant model - meaningful story gates
+Gacha mechanics must feel fair - 60 pull average, 69 hard pity for C6 unlocks
+All Rose responses consider:
+
+Current relationship level
+Recent conversation history
+User's emotional state
+Time since last interaction
+
+
+Rose's memory system prioritizes:
+
+Emotional moments
+Relationship milestones
+User preferences and personality
+Conflict resolution history
+
+
+
+🚀 MVP Success Metrics
+
+Response time: < 2 seconds for Rose's replies
+Personality consistency: Rose maintains character across 100+ message conversations
+User retention: Daily active users return rate > 60%
+Monetization: Gacha system generates sustainable revenue for WRLD expansion
+Relationship depth: Users progress through multiple confidant levels
+Technical stability: 99% uptime for Rose's Telegram bot
+
+📋 Current MVP Priorities
+
+Rose Personality Engine - Core flirty, dramatic, artistic responses
+Telegram Bot Integration - Seamless conversation flow
+Basic Memory System - Remember user preferences and history
+Relationship Progression - Simple confidant level advancement
+Gacha Prototype - Basic pull mechanics and outfit unlocks
+Performance Optimization - Sub-2-second response times
+
+
+Remember: You're building the foundation for the entire WRLD ecosystem. Rose's success validates the emotional AI companion model and funds the multi-character expansion. Focus on creating genuine emotional connection through consistent personality and meaningful progression mechanics.
