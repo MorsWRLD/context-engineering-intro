@@ -3,6 +3,8 @@
 - **Check `TASK.md`** before starting a new task. If the task isn’t listed, add it with a brief description and today's date.
 - **Use consistent naming conventions, file structure, and architecture patterns** as described in `PLANNING.md`.
 - **Use venv_linux** (the virtual environment) whenever executing Python commands, including for unit tests.
+- **Основная LLM — `OpenAI API (GPT-4.5/4o)` с возможным расширением под `local LLM` через Ollama или подобные, в зависимости от задачи.
+- **Все async-функции должны быть совместимы с real-time коммуникацией (например, через WebSocket).
 
 ### 🧱 Code Structure & Modularity
 - **Never create a file longer than 500 lines of code.** If a file approaches this limit, refactor by splitting it into modules or helper files.
@@ -14,6 +16,10 @@
 - **Use clear, consistent imports** (prefer relative imports within packages).
 - **Use clear, consistent imports** (prefer relative imports within packages).
 - **Use python_dotenv and load_env()** for environment variables.
+- Агентная архитектура должна быть plug-n-play: легко заменять LLM, память, voice backend и даже векторные хранилища.
+- Используется LangChain или custom memory middleware (описано в PLANNING.md).
+- Вся логика голосовых агентов, real-time команд и пользовательского ввода вынесена в отдельные модули: `agent_core`, `streaming_io`, `avatar_controller`.
+
 
 ### 🧪 Testing & Reliability
 - **Always create Pytest unit tests for new features** (functions, classes, routes, etc).
@@ -23,6 +29,10 @@
     - 1 test for expected use
     - 1 edge case
     - 1 failure case
+- Если модуль зависит от внешнего API (OpenAI, 11Labs, etc.), использовать `mock`-интерфейсы и `env` переменные.
+- Все интеграционные тесты находятся в папке `/tests/integration`.
+- У agenta должен быть юнит-тест на реакцию на нестандартный промпт или неожиданный ответ LLM.
+
 
 ### ✅ Task Completion
 - **Mark completed tasks in `TASK.md`** immediately after finishing them.
@@ -46,6 +56,10 @@
           type: Description.
       """
   ```
+- Используется `LangChain` или кастомный middleware для memory/agents.
+- Все промпты и системные команды хранятся в `prompts/` и должны быть сериализуемыми.
+- Используется `11labs` для голоса, `WebSocket` для стриминга, `OpenAI Whisper` (или `local whisper`) для распознавания.
+
 
 ### 📚 Documentation & Explainability
 - **Update `README.md`** when new features are added, dependencies change, or setup steps are modified.
@@ -57,3 +71,18 @@
 - **Never hallucinate libraries or functions** – only use known, verified Python packages.
 - **Always confirm file paths and module names** exist before referencing them in code or tests.
 - **Never delete or overwrite existing code** unless explicitly instructed to or if part of a task from `TASK.md`.
+- Используется только OpenAI API или локальные модели через API-интерфейс.
+- Для всех AI-компонентов (генерация текста, речи, памяти) использовать middleware, чтобы в любой момент можно было сменить поставщика.
+
+###📡 Real-time Communication
+- Все агенты должны поддерживать real-time взаимодействие.
+- Используется `WebSocket` + `async queue` + `TTS stream` для голоса.
+- Любая задержка выше 200мс считается проблемной и требует оптимизации.
+
+###🧬 LLM Stack
+- Основной стек:
+  - GPT-4o / GPT-4-turbo через OpenAI API
+  - 11Labs (voice)
+  - Whisper/OpenWhisper (ASR)
+  - LangChain (или кастомные memory-агенты)
+  - Chroma/FAISS (векторка, опционально)
