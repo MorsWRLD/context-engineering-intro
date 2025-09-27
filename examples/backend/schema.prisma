@@ -1,0 +1,15 @@
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  sessions  Session[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  duration  Int
+  active    Boolean
+  startedAt DateTime
+  stoppedAt DateTime?
+  user      User     @relation(fields: [userId], references: [id])
+}
