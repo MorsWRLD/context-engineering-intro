@@ -1,0 +1,14 @@
+[
+  {
+    "id": "first_hour",
+    "title": "First Hour Logged",
+    "description": "Track a total of 60 minutes",
+    "reward": { "xp": 100, "credits": 50 }
+  },
+  {
+    "id": "streak_3",
+    "title": "Consistency is Key",
+    "description": "Log time 3 days in a row",
+    "reward": { "xp": 200, "credits": 200 }
+  }
+]
