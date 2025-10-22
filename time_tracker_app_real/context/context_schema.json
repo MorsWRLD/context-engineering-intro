@@ -1,0 +1,104 @@
+{
+  "version": "1.0.0",
+  "schema": {
+    "user": {
+      "profile": {
+        "id": "string",
+        "name": "string",
+        "preferences": {
+          "workStyle": "enum[chill, grind, balanced]",
+          "notificationLevel": "enum[minimal, moderate, frequent]",
+          "emotionalSupport": "boolean"
+        },
+        "stats": {
+          "level": "integer",
+          "xp": "integer",
+          "credits": "integer",
+          "streak": "integer"
+        }
+      },
+      "emotional_state": {
+        "current_mood": "enum[energized, focused, tired, stressed, neutral]",
+        "stress_level": "float[0-1]",
+        "productivity_score": "float[0-1]",
+        "last_interaction": "timestamp"
+      }
+    },
+    "session": {
+      "current": {
+        "id": "string",
+        "mode": "enum[chill, grind]",
+        "start_time": "timestamp",
+        "duration": "duration",
+        "pauses": "array",
+        "goals": "array"
+      },
+      "history": {
+        "recent_sessions": "array[session]",
+        "patterns": {
+          "peak_hours": "array[hour]",
+          "average_duration": "duration",
+          "preferred_mode": "string"
+        }
+      }
+    },
+    "agents": {
+      "companion": {
+        "personality": "enum[rose, xeni, watchface]",
+        "relationship_level": "integer",
+        "conversation_history": "array",
+        "emotional_memory": "object"
+      },
+      "scheduler": {
+        "upcoming_events": "array",
+        "smart_suggestions": "array",
+        "break_reminders": "object",
+        "productivity_insights": "object"
+      },
+      "os_agent": {
+        "automation_tasks": "array",
+        "file_operations": "array",
+        "browser_tasks": "array",
+        "permissions": "object"
+      },
+      "commerce": {
+        "wallet": {
+          "credits": "integer",
+          "crypto_address": "string",
+          "transaction_history": "array"
+        },
+        "shop": {
+          "available_items": "array",
+          "purchased_items": "array",
+          "wishlist": "array"
+        }
+      }
+    },
+    "context_memory": {
+      "short_term": {
+        "max_entries": 100,
+        "ttl_minutes": 30,
+        "entries": "array"
+      },
+      "long_term": {
+        "max_entries": 1000,
+        "categories": ["achievements", "preferences", "patterns", "relationships"],
+        "entries": "array"
+      },
+      "working_memory": {
+        "active_context": "object",
+        "pending_tasks": "array",
+        "agent_states": "object"
+      }
+    },
+    "inter_agent_communication": {
+      "message_queue": "array",
+      "event_bus": {
+        "subscriptions": "object",
+        "pending_events": "array"
+      },
+      "shared_goals": "array",
+      "coordination_rules": "object"
+    }
+  }
+}

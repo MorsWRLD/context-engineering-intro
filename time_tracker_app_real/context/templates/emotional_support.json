@@ -1,0 +1,23 @@
+{
+  "template_id": "emotional_check_in",
+  "agent": "companion",
+  "triggers": ["session_start", "session_complete", "achievement_unlock"],
+  "variables": {
+    "user_name": "{{user.profile.name}}",
+    "session_duration": "{{session.current.duration}}",
+    "xp_earned": "{{session.current.xpEarned}}",
+    "streak": "{{user.profile.stats.streak}}"
+  },
+  "responses": {
+    "session_start": {
+      "rose": "Hey {{user_name}}! Ready to focus? Let's make this count!",
+      "xeni": "{{user_name}}, time to DOMINATE this session!",
+      "watchface": "User {{user_name}} detected. Initiating work session."
+    },
+    "session_complete": {
+      "rose": "Amazing work, {{user_name}}! You earned {{xp_earned}} XP!",
+      "xeni": "LEGENDARY! {{xp_earned}} XP! Keep crushing it!",
+      "watchface": "Session complete. {{xp_earned}} XP logged. Streak: {{streak}}."
+    }
+  }
+}

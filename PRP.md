@@ -271,6 +271,36 @@ class Achievement {
 }
 ```
 
+### 4.5 Theming & Skinning Architecture
+
+#### Objectives
+- Support reskinning via data-driven theme packs without code changes
+- Enable monetization and progression through unlockable/purchasable themes
+
+#### Theme Pack Format (v1)
+- Location: assets/themes/<theme_id>/theme.json (+ optional assets/)
+- JSON keys:
+  - colors: background, primary (Chill), secondary (Grind), accent, textPrimary, textSecondary
+  - typography: heading, numerals, scale
+  - rings: array of { radius, strokeWidth, glowColorKey, glowBlur }
+  - motion: pulse/start/pause/reward durations and pulse intensity
+  - assets: optional images (ringOverlay, particles)
+- Example: see examples/theme_pack.example.json
+
+#### Runtime Behavior
+- Load selected theme at app start; persist selection
+- Allow switching themes from Settings without restarting
+- Fallback to default if validation fails
+
+#### Integration Points
+- Timer painter consumes rings[*] and glow keys
+- Mode system maps Chill→colors.primary, Grind→colors.secondary
+- Reward popups read motion.reward for timings
+
+#### Monetization Hook
+- Each theme can carry an entitlement key (e.g., theme.synthwave_sunset)
+- UI hides/locks premium themes until entitlement present
+
 ---
 
 ## 5. Implementation Phases
@@ -404,6 +434,12 @@ class Achievement {
 - Task management tools
 - Time tracking APIs
 - Export functionality
+
+### 9.5 Monetization & Theme Marketplace
+- Theme Packs as purchasable or unlockable items
+- Entitlements stored locally first; server-backed later
+- In-app preview before applying
+- Seasonal/event themes to drive engagement
 
 ---
 
